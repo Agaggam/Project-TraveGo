@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <title>TravelGo Admin Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -28,10 +31,20 @@
             <a href="#" onclick="showHome()" class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent flex items-center gap-2 hover:opacity-80 transition">
                 <span>✈️</span> TravelGo API
             </a>
-            <button onclick="showForm('create')" class="bg-gradient-to-r from-yellow-400 to-orange-400 text-white px-6 py-2.5 rounded-full font-semibold shadow-lg shadow-orange-200 hover:shadow-orange-300 hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-2 active:scale-95">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                Tambah Paket
-            </button>
+
+            <div class="flex items-center gap-3">
+                <button onclick="showForm('create')" class="bg-gradient-to-r from-yellow-400 to-orange-400 text-white px-6 py-2.5 rounded-full font-semibold shadow-lg shadow-orange-200 hover:shadow-orange-300 hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-2 active:scale-95">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    <span class="hidden sm:inline">Tambah Paket</span>
+                </button>
+
+                <button onclick="logout()" class="group flex items-center gap-2 text-gray-500 hover:text-red-600 hover:bg-red-50 px-4 py-2.5 rounded-full transition-all duration-300 font-medium" title="Keluar Aplikasi">
+                    <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                    </svg>
+                    <span class="hidden md:inline">Logout</span>
+                </button>
+            </div>
         </div>
     </nav>
 
@@ -225,6 +238,38 @@
     <script>
         const API_URL = '/api/paket-wisata';
 
+        // --- HELPER CSRF (PENTING) ---
+        function getCsrfToken() {
+            return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        }
+
+        // --- FUNGSI LOGOUT (BARU) ---
+        function logout() {
+            Swal.fire({
+                title: 'Ingin Keluar?',
+                text: "Sesi Anda akan diakhiri.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#9ca3af',
+                confirmButtonText: 'Ya, Keluar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch('/logout', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': getCsrfToken() // Kirim Token
+                        }
+                    }).then(() => {
+                        window.location.href = '/login';
+                    }).catch(() => {
+                        window.location.href = '/login';
+                    });
+                }
+            });
+        }
+
         // --- NAVIGATION ---
         function hideAll() {
             ['view-home', 'view-form', 'view-detail'].forEach(id => document.getElementById(id).classList.add('hidden-section'));
@@ -246,7 +291,7 @@
             grid.innerHTML = '';
 
             try {
-                let url = search ? `${API_URL}?search=${search}` : `${API_URL}?limit=100`; // Default limit 100
+                let url = search ? `${API_URL}?search=${search}` : `${API_URL}?limit=100`;
                 const res = await fetch(url);
                 const json = await res.json();
 
@@ -349,7 +394,11 @@
             try {
                 const res = await fetch(url, {
                     method: method,
-                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': getCsrfToken() // KIRIM TOKEN
+                    },
                     body: JSON.stringify(data)
                 });
                 const json = await res.json();
@@ -424,7 +473,13 @@
             });
 
             if (result.isConfirmed) {
-                await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+                await fetch(`${API_URL}/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': getCsrfToken() // KIRIM TOKEN DI DELETE JUGA
+                    }
+                });
                 await Swal.fire({ title: 'Terhapus!', text: 'Data berhasil dihapus.', icon: 'success', timer: 1500, showConfirmButton: false });
                 showHome();
             }
