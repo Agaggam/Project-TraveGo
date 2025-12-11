@@ -13,7 +13,7 @@ class DashboardController extends Controller
     {
         $totalPaket = PaketWisata::count();
         $totalUser = User::where('role', 'user')->count();
-        $latestPakets = PaketWisata::latest()->take(5)->get();
+        $latestPakets = PaketWisata::oldest()->take(5)->get();
 
         return view('admin.dashboard', compact('totalPaket', 'totalUser', 'latestPakets'));
     }
