@@ -1,13 +1,18 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Web;
 
+use App\Http\Controllers\Controller;
 use App\Models\PaketWisata;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
-class PaketWisataController extends Controller
+class PaketController extends Controller
 {
-    public function index(Request $request)
+    /**
+     * Display list of paket wisata
+     */
+    public function index(Request $request): View
     {
         $query = PaketWisata::query();
 
@@ -48,7 +53,10 @@ class PaketWisataController extends Controller
         return view('paket.index', compact('paketWisatas', 'lokasiList'));
     }
 
-    public function show(PaketWisata $paketWisata)
+    /**
+     * Display detail of paket wisata
+     */
+    public function show(PaketWisata $paketWisata): View
     {
         $relatedPakets = PaketWisata::where('lokasi', $paketWisata->lokasi)
             ->where('id', '!=', $paketWisata->id)

@@ -51,6 +51,9 @@
                     <div class="hidden md:flex ml-10 space-x-8">
                         <a href="/" class="text-gray-600 dark:text-dark-200 hover:text-primary-500 dark:hover:text-primary-400 transition-colors font-medium">Beranda</a>
                         <a href="{{ route('paket.index') }}" class="text-gray-600 dark:text-dark-200 hover:text-primary-500 dark:hover:text-primary-400 transition-colors font-medium">Paket Wisata</a>
+                        <a href="{{ route('destinasi') }}" class="text-gray-600 dark:text-dark-200 hover:text-primary-500 dark:hover:text-primary-400 transition-colors font-medium">Destinasi</a>
+                        <a href="{{ route('about') }}" class="text-gray-600 dark:text-dark-200 hover:text-primary-500 dark:hover:text-primary-400 transition-colors font-medium">Tentang Kami</a>
+                        <a href="{{ route('kontak') }}" class="text-gray-600 dark:text-dark-200 hover:text-primary-500 dark:hover:text-primary-400 transition-colors font-medium">Kontak</a>
                     </div>
                 </div>
                 <div class="flex items-center space-x-4">
@@ -122,6 +125,9 @@
                     <ul class="space-y-3">
                         <li><a href="/" class="text-gray-500 dark:text-dark-400 hover:text-primary-500 dark:hover:text-primary-400 transition-colors">Beranda</a></li>
                         <li><a href="{{ route('paket.index') }}" class="text-gray-500 dark:text-dark-400 hover:text-primary-500 dark:hover:text-primary-400 transition-colors">Paket Wisata</a></li>
+                        <li><a href="{{ route('destinasi') }}" class="text-gray-500 dark:text-dark-400 hover:text-primary-500 dark:hover:text-primary-400 transition-colors">Destinasi</a></li>
+                        <li><a href="{{ route('about') }}" class="text-gray-500 dark:text-dark-400 hover:text-primary-500 dark:hover:text-primary-400 transition-colors">Tentang Kami</a></li>
+                        <li><a href="{{ route('kontak') }}" class="text-gray-500 dark:text-dark-400 hover:text-primary-500 dark:hover:text-primary-400 transition-colors">Kontak</a></li>
                     </ul>
                 </div>
                 

@@ -1,21 +1,30 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Web;
 
+use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\View\View;
 
 class AuthController extends Controller
 {
-    public function showLogin()
+    /**
+     * Show login form
+     */
+    public function showLogin(): View
     {
         return view('auth.login');
     }
 
-    public function login(Request $request)
+    /**
+     * Handle login request
+     */
+    public function login(Request $request): RedirectResponse
     {
         $credentials = $request->validate([
             'email' => ['required', 'email'],
@@ -39,12 +48,18 @@ class AuthController extends Controller
         ])->onlyInput('email');
     }
 
-    public function showRegister()
+    /**
+     * Show register form
+     */
+    public function showRegister(): View
     {
         return view('auth.register');
     }
 
-    public function register(Request $request)
+    /**
+     * Handle register request
+     */
+    public function register(Request $request): RedirectResponse
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -64,7 +79,10 @@ class AuthController extends Controller
         return redirect('/');
     }
 
-    public function logout(Request $request)
+    /**
+     * Handle logout request
+     */
+    public function logout(Request $request): RedirectResponse
     {
         Auth::logout();
 

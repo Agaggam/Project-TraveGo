@@ -1,12 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Web;
 
+use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\PaketWisata;
 use App\Services\MidtransService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 class OrderController extends Controller
 {
@@ -17,12 +20,18 @@ class OrderController extends Controller
         $this->midtransService = $midtransService;
     }
 
-    public function checkout(PaketWisata $paketWisata)
+    /**
+     * Show checkout page
+     */
+    public function checkout(PaketWisata $paketWisata): View
     {
-        return view('order.checkout', compact('paketWisata'));
+        return view('paket.order.checkout', compact('paketWisata'));
     }
 
-    public function store(Request $request, PaketWisata $paketWisata)
+    /**
+     * Store new order
+     */
+    public function store(Request $request, PaketWisata $paketWisata): JsonResponse
     {
         $validated = $request->validate([
             'nama_pemesan' => 'required|string|max:255',
@@ -50,7 +59,6 @@ class OrderController extends Controller
             'status' => 'pending',
         ]);
 
-        // Create Midtrans transaction
         $params = [
             'transaction_details' => [
                 'order_id' => $orderId,
@@ -89,35 +97,47 @@ class OrderController extends Controller
         }
     }
 
-    public function success(Request $request)
+    /**
+     * Show order success page
+     */
+    public function success(Request $request): View
     {
         $orderId = $request->query('order_id');
         $order = Order::where('order_id', $orderId)->firstOrFail();
 
-        return view('order.success', compact('order'));
+        return view('paket.order.success', compact('order'));
     }
 
-    public function history()
+    /**
+     * Show order history
+     */
+    public function history(): View
     {
         $orders = Order::where('user_id', Auth::id())
             ->with('paketWisata')
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
-        return view('order.history', compact('orders'));
+        return view('paket.order.history', compact('orders'));
     }
 
-    public function show(Order $order)
+    /**
+     * Show order detail
+     */
+    public function show(Order $order): View
     {
         if ($order->user_id !== Auth::id()) {
             abort(403);
         }
 
         $order->load('paketWisata');
-        return view('order.show', compact('order'));
+        return view('paket.order.show', compact('order'));
     }
 
-    public function callback(Request $request)
+    /**
+     * Handle Midtrans callback
+     */
+    public function callback(Request $request): JsonResponse
     {
         $serverKey = config('midtrans.server_key');
         $hashed = hash('sha512', $request->order_id . $request->status_code . $request->gross_amount . $serverKey);

@@ -5,15 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'TraveGo')</title>
-    
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    
+
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    
+
     <style>
         * { font-family: 'Inter', sans-serif; }
         h1, h2, h3, h4, h5, h6, .font-heading { font-family: 'Poppins', sans-serif; }
@@ -32,7 +32,7 @@
         <div class="absolute top-1/4 left-10 w-72 h-72 bg-primary-500/10 rounded-full blur-3xl"></div>
         <div class="absolute bottom-1/4 right-10 w-96 h-96 bg-accent-500/10 rounded-full blur-3xl"></div>
     </div>
-    
+
     <div class="w-full max-w-md relative z-10 px-4">
         <!-- Theme Toggle -->
         <div class="absolute top-4 right-4">
@@ -45,7 +45,7 @@
                 </svg>
             </button>
         </div>
-        
+
         <div class="text-center mb-8">
             <a href="/" class="inline-flex items-center space-x-3">
                 <div class="w-12 h-12 bg-gradient-to-br from-primary-500 to-accent-500 rounded-xl flex items-center justify-center">
@@ -57,7 +57,7 @@
             </a>
             <p class="text-gray-600 dark:text-dark-400 mt-3">Jelajahi Indonesia Bersama Kami</p>
         </div>
-        
+
         @yield('content')
     </div>
 </body>

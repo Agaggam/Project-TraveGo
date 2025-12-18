@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Web;
 
+use App\Http\Controllers\Controller;
 use App\Services\MidtransService;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class PaymentController extends Controller
 {
@@ -15,6 +16,9 @@ class PaymentController extends Controller
         $this->midtransService = $midtransService;
     }
 
+    /**
+     * Create Midtrans transaction
+     */
     public function createTransaction(Request $request): JsonResponse
     {
         $request->validate([
@@ -54,6 +58,9 @@ class PaymentController extends Controller
         }
     }
 
+    /**
+     * Handle Midtrans callback
+     */
     public function handleCallback(Request $request): JsonResponse
     {
         $serverKey = config('midtrans.server_key');
@@ -86,6 +93,9 @@ class PaymentController extends Controller
         return response()->json(['message' => 'OK']);
     }
 
+    /**
+     * Get transaction status
+     */
     public function getTransactionStatus(string $orderId): JsonResponse
     {
         try {
