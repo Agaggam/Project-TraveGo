@@ -10,6 +10,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\RateLimiter;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
@@ -22,7 +24,7 @@ class AuthController extends Controller
             'role' => 'user',
         ]);
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+        $token = JWTAuth::fromUser($user);
 
         return response()->json([
             'status' => 'success',
@@ -37,15 +39,26 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request): JsonResponse
     {
-        if (!Auth::attempt($request->only('email', 'password'))) {
+        $key = 'api_login:' . $request->ip();
+        if (RateLimiter::tooManyAttempts($key, 5)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Terlalu banyak percobaan login. Coba lagi nanti.'
+            ], 429);
+        }
+
+        $credentials = $request->only('email', 'password');
+
+        if (!$token = JWTAuth::attempt($credentials)) {
+            RateLimiter::hit($key, 60);
             return response()->json([
                 'status' => 'error',
                 'message' => 'Email atau password salah'
             ], 401);
         }
 
-        $user = User::where('email', $request->email)->firstOrFail();
-        $token = $user->createToken('auth_token')->plainTextToken;
+        RateLimiter::clear($key);
+        $user = auth()->user();
 
         return response()->json([
             'status' => 'success',
@@ -60,7 +73,7 @@ class AuthController extends Controller
 
     public function logout(Request $request): JsonResponse
     {
-        $request->user()->currentAccessToken()->delete();
+        JWTAuth::invalidate(JWTAuth::getToken());
 
         return response()->json([
             'status' => 'success',
@@ -73,7 +86,7 @@ class AuthController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Data user berhasil diambil',
-            'data' => $request->user()
+            'data' => JWTAuth::user()
         ], 200);
     }
 }

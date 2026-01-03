@@ -1,106 +1,126 @@
 @extends('layouts.admin')
 
-@section('title', 'Edit Paket Wisata - Admin TraveGo')
-@section('page-title', 'Edit Paket Wisata')
+@section('title', isset($paketWisata) ? 'Edit Paket' : 'Tambah Paket' . ' - Admin')
+@section('page-title', isset($paketWisata) ? 'Edit Paket' : 'Tambah Paket')
 
 @section('content')
-<div class="flex items-center mb-6">
-    <a href="{{ route('admin.paket.index') }}" class="p-2 rounded-xl text-gray-500 dark:text-dark-400 hover:bg-gray-100 dark:hover:bg-dark-800 transition-colors mr-3">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-        </svg>
+<div class="max-w-4xl">
+    <!-- Back -->
+    <a href="{{ route('admin.paket.index') }}" class="inline-flex items-center text-sm font-medium mb-6" style="color: var(--primary)">
+        <i class="fas fa-arrow-left mr-2"></i>Back to Packages
     </a>
-    <p class="text-gray-600 dark:text-dark-400">Edit paket: {{ $paketWisata->nama_paket }}</p>
-</div>
 
-<div class="bg-white dark:bg-dark-800 rounded-2xl border border-gray-100 dark:border-dark-700 p-6 transition-colors">
-    <form method="POST" action="{{ route('admin.paket.update', $paketWisata) }}">
-        @csrf
-        @method('PUT')
+    <div class="card rounded-2xl p-8">
+        <form action="{{ isset($paketWisata) ? route('admin.paket.update', $paketWisata) : route('admin.paket.store') }}" method="POST">
+            @csrf
+            @if(isset($paketWisata))
+                @method('PUT')
+            @endif
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-                <label for="nama_paket" class="block text-sm font-medium text-gray-700 dark:text-dark-300 mb-2">Nama Paket *</label>
-                <input type="text" name="nama_paket" id="nama_paket" value="{{ old('nama_paket', $paketWisata->nama_paket) }}" required
-                    class="w-full px-4 py-3 bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-dark-400 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all @error('nama_paket') border-red-500 dark:border-red-500 @enderror">
-                @error('nama_paket')
-                    <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
-                @enderror
+            <div class="space-y-6">
+                <!-- Package Name -->
+                <div>
+                    <label class="block text-sm font-medium mb-2" style="color: var(--text-secondary)">Package Name *</label>
+                    <input type="text" name="nama_paket" value="{{ old('nama_paket', $paketWisata->nama_paket ?? '') }}" required
+                        class="w-full px-4 py-3 rounded-xl border-0 focus:ring-2 focus:ring-[var(--primary)]"
+                        style="background: var(--bg-tertiary); color: var(--text-primary)">
+                    @error('nama_paket')<p class="mt-1 text-sm text-red-500">{{ $message }}</p>@enderror
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Location -->
+                    <div>
+                        <label class="block text-sm font-medium mb-2" style="color: var(--text-secondary)">Location *</label>
+                        <input type="text" name="lokasi" value="{{ old('lokasi', $paketWisata->lokasi ?? '') }}" required
+                            class="w-full px-4 py-3 rounded-xl border-0 focus:ring-2 focus:ring-[var(--primary)]"
+                            style="background: var(--bg-tertiary); color: var(--text-primary)">
+                        @error('lokasi')<p class="mt-1 text-sm text-red-500">{{ $message }}</p>@enderror
+                    </div>
+                    <!-- Duration -->
+                    <div>
+                        <label class="block text-sm font-medium mb-2" style="color: var(--text-secondary)">Duration *</label>
+                        <input type="text" name="durasi" value="{{ old('durasi', $paketWisata->durasi ?? '') }}" required placeholder="e.g. 3 Days 2 Nights"
+                            class="w-full px-4 py-3 rounded-xl border-0 focus:ring-2 focus:ring-[var(--primary)]"
+                            style="background: var(--bg-tertiary); color: var(--text-primary)">
+                        @error('durasi')<p class="mt-1 text-sm text-red-500">{{ $message }}</p>@enderror
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Price -->
+                    <div>
+                        <label class="block text-sm font-medium mb-2" style="color: var(--text-secondary)">Price (IDR) *</label>
+                        <input type="number" name="harga" value="{{ old('harga', $paketWisata->harga ?? '') }}" required min="0"
+                            class="w-full px-4 py-3 rounded-xl border-0 focus:ring-2 focus:ring-[var(--primary)]"
+                            style="background: var(--bg-tertiary); color: var(--text-primary)">
+                        @error('harga')<p class="mt-1 text-sm text-red-500">{{ $message }}</p>@enderror
+                    </div>
+                    <!-- Stock -->
+                    <div>
+                        <label class="block text-sm font-medium mb-2" style="color: var(--text-secondary)">Available Stock *</label>
+                        <input type="number" name="stok" value="{{ old('stok', $paketWisata->stok ?? 10) }}" required min="0"
+                            class="w-full px-4 py-3 rounded-xl border-0 focus:ring-2 focus:ring-[var(--primary)]"
+                            style="background: var(--bg-tertiary); color: var(--text-primary)">
+                        @error('stok')<p class="mt-1 text-sm text-red-500">{{ $message }}</p>@enderror
+                    </div>
+                    <!-- Rating -->
+                    <div>
+                        <label class="block text-sm font-medium mb-2" style="color: var(--text-secondary)">Rating</label>
+                        <input type="number" name="rating" value="{{ old('rating', $paketWisata->rating ?? 4.5) }}" step="0.1" min="0" max="5"
+                            class="w-full px-4 py-3 rounded-xl border-0 focus:ring-2 focus:ring-[var(--primary)]"
+                            style="background: var(--bg-tertiary); color: var(--text-primary)">
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div>
+                    <label class="block text-sm font-medium mb-2" style="color: var(--text-secondary)">Description *</label>
+                    <textarea name="deskripsi" rows="5" required
+                        class="w-full px-4 py-3 rounded-xl border-0 focus:ring-2 focus:ring-[var(--primary)] resize-none"
+                        style="background: var(--bg-tertiary); color: var(--text-primary)">{{ old('deskripsi', $paketWisata->deskripsi ?? '') }}</textarea>
+                    @error('deskripsi')<p class="mt-1 text-sm text-red-500">{{ $message }}</p>@enderror
+                </div>
+
+                <!-- Image URL -->
+                <div>
+                    <label class="block text-sm font-medium mb-2" style="color: var(--text-secondary)">Image URL</label>
+                    @if(isset($paketWisata) && $paketWisata->gambar_url)
+                        <div class="mb-3">
+                            <img src="{{ $paketWisata->gambar_url }}" alt="" class="w-40 h-28 object-cover rounded-xl">
+                        </div>
+                    @endif
+                    <input type="url" name="gambar_url" value="{{ old('gambar_url', $paketWisata->gambar_url ?? '') }}" placeholder="https://example.com/image.jpg"
+                        class="w-full px-4 py-3 rounded-xl border-0 focus:ring-2 focus:ring-[var(--primary)]"
+                        style="background: var(--bg-tertiary); color: var(--text-primary)">
+                    <p class="text-xs mt-1" style="color: var(--text-muted)">Paste image URL from web (e.g. Unsplash)</p>
+                </div>
+
+                <!-- Destinations -->
+                @if(isset($destinasis) && $destinasis->count() > 0)
+                <div>
+                    <label class="block text-sm font-medium mb-2" style="color: var(--text-secondary)">Included Destinations</label>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                        @foreach($destinasis as $destinasi)
+                            <label class="flex items-center p-3 rounded-xl cursor-pointer transition-colors hover:bg-opacity-80" style="background: var(--bg-tertiary)">
+                                <input type="checkbox" name="destinasi_ids[]" value="{{ $destinasi->id }}"
+                                    {{ (isset($paketWisata) && $paketWisata->destinasis->contains($destinasi->id)) || (is_array(old('destinasi_ids')) && in_array($destinasi->id, old('destinasi_ids'))) ? 'checked' : '' }}
+                                    class="rounded" style="color: var(--primary)">
+                                <span class="ml-2 text-sm" style="color: var(--text-secondary)">{{ $destinasi->nama_destinasi }}</span>
+                            </label>
+                        @endforeach
+                    </div>
+                </div>
+                @endif
+
+                <!-- Submit -->
+                <div class="flex items-center justify-end space-x-4 pt-6" style="border-top: 1px solid var(--border)">
+                    <a href="{{ route('admin.paket.index') }}" class="px-6 py-3 rounded-xl font-medium" style="color: var(--text-muted)">Cancel</a>
+                    <button type="submit" class="btn-primary px-8 py-3 rounded-xl font-semibold">
+                        <i class="fas fa-save mr-2"></i>{{ isset($paketWisata) ? 'Update' : 'Create' }} Package
+                    </button>
+                </div>
             </div>
-
-            <div>
-                <label for="lokasi" class="block text-sm font-medium text-gray-700 dark:text-dark-300 mb-2">Lokasi *</label>
-                <input type="text" name="lokasi" id="lokasi" value="{{ old('lokasi', $paketWisata->lokasi) }}" required
-                    class="w-full px-4 py-3 bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-dark-400 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all @error('lokasi') border-red-500 dark:border-red-500 @enderror"
-                    placeholder="Contoh: Bali, Lombok, Raja Ampat">
-                @error('lokasi')
-                    <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div>
-                <label for="harga" class="block text-sm font-medium text-gray-700 dark:text-dark-300 mb-2">Harga (Rp) *</label>
-                <input type="number" name="harga" id="harga" value="{{ old('harga', $paketWisata->harga) }}" required min="0" step="1000"
-                    class="w-full px-4 py-3 bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-dark-400 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all @error('harga') border-red-500 dark:border-red-500 @enderror">
-                @error('harga')
-                    <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div>
-                <label for="durasi" class="block text-sm font-medium text-gray-700 dark:text-dark-300 mb-2">Durasi *</label>
-                <input type="text" name="durasi" id="durasi" value="{{ old('durasi', $paketWisata->durasi) }}" required
-                    class="w-full px-4 py-3 bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-dark-400 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all @error('durasi') border-red-500 dark:border-red-500 @enderror"
-                    placeholder="Contoh: 3 Hari 2 Malam">
-                @error('durasi')
-                    <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div>
-                <label for="rating" class="block text-sm font-medium text-gray-700 dark:text-dark-300 mb-2">Rating (0-5)</label>
-                <input type="number" name="rating" id="rating" value="{{ old('rating', $paketWisata->rating) }}" min="0" max="5" step="0.1"
-                    class="w-full px-4 py-3 bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-dark-400 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all @error('rating') border-red-500 dark:border-red-500 @enderror">
-                @error('rating')
-                    <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div>
-                <label for="gambar_url" class="block text-sm font-medium text-gray-700 dark:text-dark-300 mb-2">URL Gambar</label>
-                <input type="url" name="gambar_url" id="gambar_url" value="{{ old('gambar_url', $paketWisata->gambar_url) }}"
-                    class="w-full px-4 py-3 bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-dark-400 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all @error('gambar_url') border-red-500 dark:border-red-500 @enderror"
-                    placeholder="https://example.com/gambar.jpg">
-                @error('gambar_url')
-                    <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
-                @enderror
-            </div>
-        </div>
-
-        <div class="mt-6">
-            <label for="deskripsi" class="block text-sm font-medium text-gray-700 dark:text-dark-300 mb-2">Deskripsi *</label>
-            <textarea name="deskripsi" id="deskripsi" rows="5" required
-                class="w-full px-4 py-3 bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-dark-400 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all resize-none @error('deskripsi') border-red-500 dark:border-red-500 @enderror">{{ old('deskripsi', $paketWisata->deskripsi) }}</textarea>
-            @error('deskripsi')
-                <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
-            @enderror
-        </div>
-
-        @if($paketWisata->gambar_url)
-            <div class="mt-6">
-                <label class="block text-sm font-medium text-gray-700 dark:text-dark-300 mb-2">Preview Gambar</label>
-                <img src="{{ $paketWisata->gambar_url }}" alt="{{ $paketWisata->nama_paket }}" class="w-48 h-32 object-cover rounded-xl border border-gray-200 dark:border-dark-600">
-            </div>
-        @endif
-
-        <div class="mt-8 flex justify-end space-x-4">
-            <a href="{{ route('admin.paket.index') }}" class="px-6 py-3 border border-gray-300 dark:border-dark-600 text-gray-700 dark:text-dark-300 rounded-xl hover:bg-gray-50 dark:hover:bg-dark-700 transition-all duration-300 font-medium">
-                Batal
-            </a>
-            <button type="submit" class="px-6 py-3 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white rounded-xl transition-all duration-300 font-medium">
-                Simpan Perubahan
-            </button>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
 @endsection

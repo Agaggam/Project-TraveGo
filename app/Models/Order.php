@@ -13,6 +13,7 @@ class Order extends Model
         'order_id',
         'user_id',
         'paket_wisata_id',
+        'destinasi_id',
         'nama_pemesan',
         'email',
         'phone',
@@ -42,8 +43,18 @@ class Order extends Model
         return $this->belongsTo(PaketWisata::class);
     }
 
+    public function destinasi()
+    {
+        return $this->belongsTo(Destinasi::class);
+    }
+
     public static function generateOrderId()
     {
         return 'TRV-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -6));
+    }
+
+    public function review()
+    {
+        return $this->hasOne(Review::class, 'booking_id')->where('booking_type', 'Order');
     }
 }

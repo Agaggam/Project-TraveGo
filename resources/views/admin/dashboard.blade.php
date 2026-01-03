@@ -5,112 +5,189 @@
 
 @section('content')
 <!-- Stats Cards -->
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-    <div class="bg-white dark:bg-dark-800 rounded-2xl border border-gray-100 dark:border-dark-700 p-6 transition-colors">
-        <div class="flex items-center">
-            <div class="w-14 h-14 bg-gradient-to-br from-primary-500/20 to-primary-600/20 rounded-xl flex items-center justify-center">
-                <svg class="w-7 h-7 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
-                </svg>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    @php
+        $stats = [
+            ['Total Paket', $totalPaket ?? 0, 'fas fa-box', 'primary', '+12% from last month'],
+            ['Total Destinasi', $totalDestinasi ?? 0, 'fas fa-map-marker-alt', 'accent', 'Active locations'],
+            ['Total Tiket', $totalTicket ?? 0, 'fas fa-ticket-alt', 'primary', 'Available routes'],
+            ['Total Hotel', $totalHotel ?? 0, 'fas fa-hotel', 'accent', 'Partner hotels'],
+        ];
+    @endphp
+    @foreach($stats as $stat)
+        <div class="card rounded-2xl p-6">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background: rgba({{ $stat[3] == 'primary' ? '16,185,129' : '245,158,11' }},0.1)">
+                    <i class="{{ $stat[2] }} text-xl" style="color: var(--{{ $stat[3] }})"></i>
+                </div>
             </div>
-            <div class="ml-4">
-                <p class="text-sm text-gray-500 dark:text-dark-400">Total Paket Wisata</p>
-                <p class="text-3xl font-heading font-bold text-gray-900 dark:text-white">{{ $totalPaket }}</p>
-            </div>
+            <h3 class="text-3xl font-bold mb-1" style="color: var(--text-primary)">{{ number_format($stat[1]) }}</h3>
+            <p class="text-sm" style="color: var(--text-muted)">{{ $stat[0] }}</p>
+            <p class="text-xs mt-2" style="color: var(--primary)">{{ $stat[4] }}</p>
         </div>
-    </div>
-
-    <div class="bg-white dark:bg-dark-800 rounded-2xl border border-gray-100 dark:border-dark-700 p-6 transition-colors">
-        <div class="flex items-center">
-            <div class="w-14 h-14 bg-gradient-to-br from-accent-500/20 to-accent-600/20 rounded-xl flex items-center justify-center">
-                <svg class="w-7 h-7 text-accent-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-                </svg>
-            </div>
-            <div class="ml-4">
-                <p class="text-sm text-gray-500 dark:text-dark-400">Total Pengguna</p>
-                <p class="text-3xl font-heading font-bold text-gray-900 dark:text-white">{{ $totalUser }}</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="bg-white dark:bg-dark-800 rounded-2xl border border-gray-100 dark:border-dark-700 p-6 transition-colors">
-        <div class="flex items-center">
-            <div class="w-14 h-14 bg-gradient-to-br from-primary-500/20 to-accent-500/20 rounded-xl flex items-center justify-center">
-                <svg class="w-7 h-7 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
-                </svg>
-            </div>
-            <div class="ml-4">
-                <p class="text-sm text-gray-500 dark:text-dark-400">Selamat Datang</p>
-                <p class="text-xl font-heading font-bold text-gray-900 dark:text-white">{{ Auth::user()->name }}</p>
-            </div>
-        </div>
-    </div>
+    @endforeach
 </div>
 
 <!-- Quick Actions -->
-<div class="bg-white dark:bg-dark-800 rounded-2xl border border-gray-100 dark:border-dark-700 p-6 mb-8 transition-colors">
-    <h2 class="text-lg font-heading font-semibold text-gray-900 dark:text-white mb-4">Aksi Cepat</h2>
-    <div class="flex flex-wrap gap-4">
-        <a href="{{ route('admin.paket.create') }}" class="inline-flex items-center px-5 py-2.5 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white rounded-xl transition-all duration-300 font-medium">
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-            </svg>
-            Tambah Paket Wisata
-        </a>
-        <a href="{{ route('admin.paket.index') }}" class="inline-flex items-center px-5 py-2.5 border border-gray-300 dark:border-dark-600 text-gray-700 dark:text-dark-300 rounded-xl hover:bg-gray-50 dark:hover:bg-dark-700 transition-all duration-300 font-medium">
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
-            </svg>
-            Kelola Paket Wisata
-        </a>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+    <div class="lg:col-span-2">
+        <div class="card rounded-2xl p-6">
+            <h3 class="font-serif text-xl font-bold mb-6" style="color: var(--text-primary)">Quick Actions</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <a href="{{ route('admin.paket.create') }}" class="p-4 rounded-xl text-center transition-all hover:scale-105" style="background: var(--bg-tertiary)">
+                    <i class="fas fa-plus text-2xl mb-2" style="color: var(--primary)"></i>
+                    <span class="block text-sm font-medium" style="color: var(--text-secondary)">Add Package</span>
+                </a>
+                <a href="{{ route('admin.destinasi.create') }}" class="p-4 rounded-xl text-center transition-all hover:scale-105" style="background: var(--bg-tertiary)">
+                    <i class="fas fa-map-pin text-2xl mb-2" style="color: var(--accent)"></i>
+                    <span class="block text-sm font-medium" style="color: var(--text-secondary)">Add Destination</span>
+                </a>
+                <a href="{{ route('admin.tickets.create') }}" class="p-4 rounded-xl text-center transition-all hover:scale-105" style="background: var(--bg-tertiary)">
+                    <i class="fas fa-plane text-2xl mb-2" style="color: var(--primary)"></i>
+                    <span class="block text-sm font-medium" style="color: var(--text-secondary)">Add Ticket</span>
+                </a>
+                <a href="{{ route('admin.hotels.create') }}" class="p-4 rounded-xl text-center transition-all hover:scale-105" style="background: var(--bg-tertiary)">
+                    <i class="fas fa-bed text-2xl mb-2" style="color: var(--accent)"></i>
+                    <span class="block text-sm font-medium" style="color: var(--text-secondary)">Add Hotel</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="card rounded-2xl p-6 h-full">
+            <h3 class="font-serif text-xl font-bold mb-4" style="color: var(--text-primary)">System Info</h3>
+            <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="text-sm" style="color: var(--text-muted)">Laravel</span>
+                    <span class="text-sm font-medium" style="color: var(--text-primary)">{{ app()->version() }}</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-sm" style="color: var(--text-muted)">PHP</span>
+                    <span class="text-sm font-medium" style="color: var(--text-primary)">{{ phpversion() }}</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-sm" style="color: var(--text-muted)">Environment</span>
+                    <span class="text-sm font-medium px-2 py-1 rounded" style="background: var(--bg-tertiary); color: var(--primary)">{{ app()->environment() }}</span>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
-<!-- Latest Packages -->
-<div class="bg-white dark:bg-dark-800 rounded-2xl border border-gray-100 dark:border-dark-700 overflow-hidden transition-colors">
-    <div class="p-6 border-b border-gray-100 dark:border-dark-700">
-        <h2 class="text-lg font-heading font-semibold text-gray-900 dark:text-white">Paket Wisata Terbaru</h2>
+<!-- Recent Items -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Recent Packages -->
+    <div class="card rounded-2xl p-6">
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="font-serif text-xl font-bold" style="color: var(--text-primary)">Recent Packages</h3>
+            <a href="{{ route('admin.paket.index') }}" class="text-sm font-medium" style="color: var(--primary)">View All</a>
+        </div>
+        <div class="space-y-4">
+            @forelse($recentPakets ?? [] as $paket)
+                <div class="flex items-center space-x-4 p-3 rounded-xl transition-colors hover:bg-[var(--bg-tertiary)]">
+                    <div class="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0" style="background: var(--bg-tertiary)">
+                        @if($paket->gambar_url)
+                            <img src="{{ $paket->gambar_url }}" alt="{{ $paket->nama_paket }}" class="w-full h-full object-cover">
+                        @else
+                            <div class="w-full h-full flex items-center justify-center">
+                                <i class="fas fa-image" style="color: var(--text-muted)"></i>
+                            </div>
+                        @endif
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h4 class="font-medium truncate" style="color: var(--text-primary)">{{ $paket->nama_paket }}</h4>
+                        <p class="text-sm" style="color: var(--text-muted)">{{ $paket->lokasi }}</p>
+                    </div>
+                    <span class="font-bold" style="color: var(--primary)">Rp {{ number_format($paket->harga/1000) }}K</span>
+                </div>
+            @empty
+                <p class="text-center py-8" style="color: var(--text-muted)">No packages yet</p>
+            @endforelse
+        </div>
     </div>
-    @if($latestPakets->count() > 0)
-        <div class="overflow-x-auto">
-            <table class="w-full">
-                <thead class="bg-gray-50 dark:bg-dark-700/50">
-                    <tr>
-                        <th class="text-left py-4 px-6 text-sm font-semibold text-gray-600 dark:text-dark-300">Nama Paket</th>
-                        <th class="text-left py-4 px-6 text-sm font-semibold text-gray-600 dark:text-dark-300">Lokasi</th>
-                        <th class="text-left py-4 px-6 text-sm font-semibold text-gray-600 dark:text-dark-300">Harga</th>
-                        <th class="text-left py-4 px-6 text-sm font-semibold text-gray-600 dark:text-dark-300">Rating</th>
-                        <th class="text-left py-4 px-6 text-sm font-semibold text-gray-600 dark:text-dark-300">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-100 dark:divide-dark-700">
-                    @foreach($latestPakets as $paket)
-                        <tr class="hover:bg-gray-50 dark:hover:bg-dark-700/50 transition-colors">
-                            <td class="py-4 px-6 text-gray-900 dark:text-white font-medium">{{ $paket->nama_paket }}</td>
-                            <td class="py-4 px-6 text-gray-600 dark:text-dark-300">{{ $paket->lokasi }}</td>
-                            <td class="py-4 px-6 text-gray-600 dark:text-dark-300">Rp {{ number_format($paket->harga, 0, ',', '.') }}</td>
-                            <td class="py-4 px-6">
-                                <span class="flex items-center text-gray-600 dark:text-dark-300">
-                                    <svg class="w-4 h-4 text-accent-400 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                                    </svg>
-                                    {{ number_format($paket->rating, 1) }}
-                                </span>
-                            </td>
-                            <td class="py-4 px-6">
-                                <a href="{{ route('admin.paket.edit', $paket) }}" class="text-primary-500 hover:text-primary-400 font-medium">Edit</a>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
+
+    <!-- Recent Destinations -->
+    <div class="card rounded-2xl p-6">
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="font-serif text-xl font-bold" style="color: var(--text-primary)">Recent Destinations</h3>
+            <a href="{{ route('admin.destinasi.index') }}" class="text-sm font-medium" style="color: var(--primary)">View All</a>
         </div>
-    @else
-        <div class="p-6 text-center text-gray-500 dark:text-dark-400">
-            Belum ada paket wisata.
+        <div class="space-y-4">
+            @forelse($recentDestinasis ?? [] as $destinasi)
+                <div class="flex items-center space-x-4 p-3 rounded-xl transition-colors hover:bg-[var(--bg-tertiary)]">
+                    <div class="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0" style="background: var(--bg-tertiary)">
+                        @if($destinasi->gambar_url)
+                            <img src="{{ $destinasi->gambar_url }}" alt="{{ $destinasi->nama_destinasi }}" class="w-full h-full object-cover">
+                        @else
+                            <div class="w-full h-full flex items-center justify-center">
+                                <i class="fas fa-image" style="color: var(--text-muted)"></i>
+                            </div>
+                        @endif
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h4 class="font-medium truncate" style="color: var(--text-primary)">{{ $destinasi->nama_destinasi }}</h4>
+                        <p class="text-sm" style="color: var(--text-muted)">{{ $destinasi->kategori }}</p>
+                    </div>
+                    <span class="px-2 py-1 rounded text-xs font-medium" style="background: var(--bg-tertiary); color: var(--text-muted)">{{ $destinasi->kategori }}</span>
+                </div>
+            @empty
+                <p class="text-center py-8" style="color: var(--text-muted)">No destinations yet</p>
+            @endforelse
         </div>
-    @endif
+    </div>
+</div>
+
+<!-- Additional Widgets Row -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+    <!-- Pending Reviews -->
+    <div class="card rounded-2xl p-6">
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="font-serif text-xl font-bold" style="color: var(--text-primary)">Pending Reviews</h3>
+            <a href="{{ route('admin.reviews.index') }}" class="text-sm font-medium" style="color: var(--primary)">Manage</a>
+        </div>
+        <div class="flex items-center justify-center py-8">
+            <div class="text-center">
+                <div class="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center mb-4" style="background: rgba(245,158,11,0.1)">
+                    <i class="fas fa-star text-2xl" style="color: var(--accent)"></i>
+                </div>
+                <p class="text-3xl font-bold" style="color: var(--text-primary)">{{ $pendingReviews ?? 0 }}</p>
+                <p class="text-sm" style="color: var(--text-muted)">Menunggu Persetujuan</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Promos -->
+    <div class="card rounded-2xl p-6">
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="font-serif text-xl font-bold" style="color: var(--text-primary)">Active Promos</h3>
+            <a href="{{ route('admin.promos.index') }}" class="text-sm font-medium" style="color: var(--primary)">Manage</a>
+        </div>
+        <div class="flex items-center justify-center py-8">
+            <div class="text-center">
+                <div class="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center mb-4" style="background: rgba(16,185,129,0.1)">
+                    <i class="fas fa-tags text-2xl" style="color: var(--primary)"></i>
+                </div>
+                <p class="text-3xl font-bold" style="color: var(--text-primary)">{{ $activePromos ?? 0 }}</p>
+                <p class="text-sm" style="color: var(--text-muted)">Promo Aktif</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Support Tickets -->
+    <div class="card rounded-2xl p-6">
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="font-serif text-xl font-bold" style="color: var(--text-primary)">Support Chat</h3>
+            <a href="{{ route('admin.support-chat.index') }}" class="text-sm font-medium" style="color: var(--primary)">View All</a>
+        </div>
+        <div class="flex items-center justify-center py-8">
+            <div class="text-center">
+                <div class="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center mb-4" style="background: rgba(59,130,246,0.1)">
+                    <i class="fas fa-headset text-2xl text-blue-500"></i>
+                </div>
+                <p class="text-3xl font-bold" style="color: var(--text-primary)">{{ $openChats ?? 0 }}</p>
+                <p class="text-sm" style="color: var(--text-muted)">Chat Aktif</p>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection

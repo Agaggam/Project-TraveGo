@@ -6,59 +6,166 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'TraveGo')</title>
 
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
-        * { font-family: 'Inter', sans-serif; }
-        h1, h2, h3, h4, h5, h6, .font-heading { font-family: 'Poppins', sans-serif; }
-        .gradient-text {
-            background: linear-gradient(135deg, #00afaf 0%, #ff8c00 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        :root {
+            --bg-primary: #faf7f2;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f5f0e8;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a5a;
+            --text-muted: #8a8a9a;
+            --primary: #047857;
+            --primary-light: #10b981;
+            --accent: #d97706;
+            --border: rgba(0,0,0,0.08);
+            --glass-bg: rgba(255,255,255,0.95);
         }
-        .glow-primary { box-shadow: 0 0 40px rgba(0, 175, 175, 0.3); }
+        .dark {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --primary: #10b981;
+            --primary-light: #34d399;
+            --accent: #f59e0b;
+            --border: rgba(255,255,255,0.1);
+            --glass-bg: rgba(30,41,59,0.95);
+        }
+        * { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, .font-serif { font-family: 'Playfair Display', serif; }
+        body { background-color: var(--bg-primary); color: var(--text-primary); }
+        .text-gradient { background: linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; transition: all 0.3s; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(16, 185, 129, 0.3); }
+        
+        /* Decorative elements */
+        .auth-decoration { position: absolute; border-radius: 50%; }
+        .auth-dots { display: grid; grid-template-columns: repeat(4, 8px); gap: 8px; }
+        .auth-dots span { width: 8px; height: 8px; background: rgba(255,255,255,0.4); border-radius: 50%; }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        .float-animation { animation: float 4s ease-in-out infinite; }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center transition-colors duration-300 bg-gray-100 dark:bg-dark-950">
-    <!-- Background decorations -->
-    <div class="fixed inset-0 overflow-hidden pointer-events-none">
-        <div class="absolute top-1/4 left-10 w-72 h-72 bg-primary-500/10 rounded-full blur-3xl"></div>
-        <div class="absolute bottom-1/4 right-10 w-96 h-96 bg-accent-500/10 rounded-full blur-3xl"></div>
+<body class="min-h-screen flex">
+    <!-- Left Side - Decorative Background -->
+    <div class="hidden lg:flex lg:w-1/2 relative overflow-hidden" style="background: linear-gradient(135deg, var(--primary), #0d9488, var(--primary-light))">
+        <!-- Decorative Elements -->
+        <div class="absolute inset-0">
+            <!-- Large circle -->
+            <div class="auth-decoration w-96 h-96 -bottom-20 -left-20" style="background: rgba(255,255,255,0.1)"></div>
+            <div class="auth-decoration w-64 h-64 top-20 -right-10" style="background: rgba(255,255,255,0.05)"></div>
+            
+            <!-- Floating circles -->
+            <div class="auth-decoration w-16 h-16 top-1/4 left-1/4 float-animation" style="background: rgba(255,255,255,0.2); animation-delay: 0s"></div>
+            <div class="auth-decoration w-10 h-10 bottom-1/3 left-1/3 float-animation" style="background: var(--accent); animation-delay: 1s"></div>
+            <div class="auth-decoration w-8 h-8 top-1/3 right-1/4 float-animation" style="background: rgba(255,255,255,0.3); animation-delay: 2s"></div>
+            
+            <!-- Dots pattern -->
+            <div class="auth-dots absolute bottom-32 left-12">
+                @for($i = 0; $i < 16; $i++)<span></span>@endfor
+            </div>
+            
+            <!-- Lines decoration -->
+            <div class="absolute top-20 left-1/3">
+                <div class="w-1 h-24 rounded-full" style="background: rgba(255,255,255,0.3)"></div>
+            </div>
+            <div class="absolute top-32 left-1/3 ml-4">
+                <div class="w-1 h-16 rounded-full" style="background: rgba(255,255,255,0.2)"></div>
+            </div>
+            
+            <!-- Arc decoration at bottom -->
+            <div class="absolute bottom-0 right-0 w-48 h-48">
+                <svg viewBox="0 0 100 100" class="w-full h-full">
+                    <circle cx="100" cy="100" r="80" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="4"/>
+                    <circle cx="100" cy="100" r="60" fill="none" stroke="var(--accent)" stroke-width="3"/>
+                </svg>
+            </div>
+        </div>
+        
+        <!-- Content -->
+        <div class="relative z-10 flex flex-col justify-center p-12 text-white">
+            <h2 class="font-serif text-5xl font-bold leading-tight mb-6">
+                Petualangan<br>dimulai disini
+            </h2>
+            <p class="text-lg text-white/80 max-w-sm leading-relaxed">
+                Bergabunglah dengan komunitas traveler kami dan temukan keindahan Indonesia bersama TraveGo.
+            </p>
+            
+            <!-- Stats -->
+            <div class="flex gap-8 mt-12">
+                <div>
+                    <div class="text-3xl font-bold">10K+</div>
+                    <div class="text-sm text-white/60">Traveler</div>
+                </div>
+                <div>
+                    <div class="text-3xl font-bold">500+</div>
+                    <div class="text-sm text-white/60">Destinasi</div>
+                </div>
+                <div>
+                    <div class="text-3xl font-bold">4.9</div>
+                    <div class="text-sm text-white/60">Rating</div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="w-full max-w-md relative z-10 px-4">
-        <!-- Theme Toggle -->
-        <div class="absolute top-4 right-4">
-            <button @click="darkMode = !darkMode" class="p-2 rounded-xl bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-700 text-gray-600 dark:text-dark-300 hover:bg-gray-50 dark:hover:bg-dark-700 transition-colors">
-                <svg x-show="!darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
-                </svg>
-                <svg x-show="darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
-                </svg>
-            </button>
+    <!-- Right Side - Form -->
+    <div class="w-full lg:w-1/2 flex flex-col relative" style="background: var(--bg-primary)">
+        <!-- Decorative arc for right side -->
+        <div class="hidden lg:block absolute top-0 right-0 w-32 h-32 opacity-20">
+            <svg viewBox="0 0 100 100" class="w-full h-full">
+                <circle cx="100" cy="0" r="80" fill="none" stroke="var(--primary)" stroke-width="2"/>
+            </svg>
         </div>
-
-        <div class="text-center mb-8">
-            <a href="/" class="inline-flex items-center space-x-3">
-                <div class="w-12 h-12 bg-gradient-to-br from-primary-500 to-accent-500 rounded-xl flex items-center justify-center">
-                    <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
+        <div class="hidden lg:block absolute bottom-0 right-0 w-16 h-16">
+            <div class="auth-dots opacity-30">
+                @for($i = 0; $i < 16; $i++)<span style="background: var(--primary)"></span>@endfor
+            </div>
+        </div>
+        
+        <!-- Header -->
+        <div class="flex items-center justify-between p-6">
+            <a href="/" class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg">
+                    <i class="fas fa-plane text-white"></i>
                 </div>
-                <span class="text-3xl font-heading font-bold gradient-text">TraveGo</span>
+                <span class="text-xl font-serif font-bold" style="color: var(--text-primary)">Trave<span style="color: var(--primary)">Go</span></span>
             </a>
-            <p class="text-gray-600 dark:text-dark-400 mt-3">Jelajahi Indonesia Bersama Kami</p>
+            <div class="flex items-center space-x-4">
+                <button @click="darkMode = !darkMode" class="w-10 h-10 rounded-xl flex items-center justify-center transition-colors" style="background: var(--bg-tertiary); color: var(--text-secondary)">
+                    <i :class="darkMode ? 'fas fa-sun' : 'fas fa-moon'"></i>
+                </button>
+                <a href="/" class="text-sm font-medium flex items-center hover:text-[var(--primary)] transition-colors" style="color: var(--text-muted)">
+                    <i class="fas fa-home mr-2"></i>Beranda
+                </a>
+            </div>
         </div>
 
-        @yield('content')
+        <!-- Form Content -->
+        <div class="flex-1 flex items-center justify-center p-6">
+            <div class="w-full max-w-md">
+                @yield('content')
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="p-6 text-center text-sm" style="color: var(--text-muted)">
+            &copy; {{ date('Y') }} TraveGo. All rights reserved.
+        </div>
     </div>
 </body>
 </html>

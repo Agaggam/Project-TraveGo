@@ -24,6 +24,7 @@ class StorePaketRequest extends FormRequest
             'rating' => 'nullable|numeric|min:0|max:5',
             'gambar' => 'nullable|file|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'gambar_url' => 'nullable|url|max:255',
+            'stok' => 'required|integer|min:0',
         ];
     }
 

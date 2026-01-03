@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('order_id')->unique();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('paket_wisata_id')->constrained()->onDelete('cascade');
+            $table->foreignId('paket_wisata_id')->nullable()->constrained('paket_wisatas')->onDelete('cascade');
+            $table->foreignId('destinasi_id')->nullable()->constrained('destinasis')->onDelete('cascade');
             $table->string('nama_pemesan');
             $table->string('email');
             $table->string('phone');

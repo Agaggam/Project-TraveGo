@@ -7,7 +7,7 @@ class MidtransService
     public function __construct()
     {
         require_once base_path('vendor/midtrans/midtrans-php/Midtrans.php');
-        
+
         \Midtrans\Config::$serverKey = config('midtrans.server_key');
         \Midtrans\Config::$clientKey = config('midtrans.client_key');
         \Midtrans\Config::$isProduction = config('midtrans.is_production', false);

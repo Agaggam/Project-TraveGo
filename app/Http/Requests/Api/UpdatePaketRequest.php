@@ -24,6 +24,7 @@ class UpdatePaketRequest extends FormRequest
             'rating' => 'sometimes|numeric|min:0|max:5',
             'gambar' => 'nullable|file|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'gambar_url' => 'sometimes|url|max:255',
+            'stok' => 'sometimes|integer|min:0',
         ];
     }
 
